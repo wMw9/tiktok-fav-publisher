@@ -56,6 +56,7 @@ func checkNewVideos() {
 
 	for _, v := range likes {
 		if wasAlreadyPosted(v.ID) {
+			log.Printf("Already posted. %v", v)
 			continue
 		}
 

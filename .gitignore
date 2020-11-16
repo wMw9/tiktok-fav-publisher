@@ -2,3 +2,5 @@
 *.out
 .idea
 .DS_Store
+/redis-data
+.env

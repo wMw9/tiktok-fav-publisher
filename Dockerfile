@@ -1,20 +1,21 @@
-FROM golang:alpine as builder
-RUN apk update && apk add --no-cache git
-RUN adduser -D -g '' appuser
+FROM golang:alpine AS build
+
+RUN apk add --update --no-cache tzdata
 
 WORKDIR /app
-COPY go.mod go.sum ./
-
-RUN go mod download
 COPY . .
+RUN go mod init ttp && CGO_ENABLED=0 go build -ldflags "-s -w"
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o /go/bin/app .
+FROM scratch
 
+ENV TZ Europe/Moscow
 
-FROM alpine
+COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /etc/passwd /etc/passwd
+COPY --from=build /etc/group /etc/group
+COPY --from=build /app/ttp /app/ttp
 
-COPY --from=builder /etc/passwd /etc/passwd
-COPY --from=builder /go/bin/app /go/bin/app
+USER 10001:10001
 
-USER appuser
-ENTRYPOINT ["/go/bin/app"]
+ENTRYPOINT ["/app/ttp"]
