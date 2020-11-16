@@ -19,7 +19,7 @@ services:
       retries: 30
   ttp:
     build: .
-    restart: on-failure
+    #restart: on-failure
     networks:
       - backend
     env_file:

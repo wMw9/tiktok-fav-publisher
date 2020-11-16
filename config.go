@@ -8,4 +8,6 @@ type config struct {
 
 	TikTokUsername  string `env:"TIKTOK_USERNAME,required"`
 	TikTokSecUserID string `env:"TIKTOK_SEC_USER_ID"`
+
+	Passcode string `env:"PASSCODE,required"`
 }

@@ -56,7 +56,7 @@ func checkNewVideos() {
 
 	for _, v := range likes {
 		if wasAlreadyPosted(v.ID) {
-			log.Printf("Already posted. %v", v)
+			log.Printf("Already posted. %v", v.ID)
 			continue
 		}
 
@@ -73,7 +73,8 @@ func checkNewVideos() {
 		if err != nil {
 			log.Println("Send video", err, v.DownloadURL)
 		}
+		repost2ch(v.DownloadURL)
 
-		time.Sleep(time.Second * 3)
+		time.Sleep(time.Second * 20)
 	}
 }
